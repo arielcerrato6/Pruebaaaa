@@ -1,0 +1,392 @@
+create database ProyectoTeoriaBD2019
+
+use ProyectoTeoriaBD2019
+go
+
+create table Usuarios
+(
+   NumID varchar(30) primary key,
+   NombreCompleto varchar(30) not null,
+   Telefono varchar(30) not null,
+   correo varchar(30) not null,
+   contrasena varchar(10) not null,
+   TipoUsuario varchar(30)
+)
+
+select * from Abogado  
+
+create table Bitacora
+(
+	codigo int IDENTITY primary key,
+    NombrePantalla varchar(100),
+	Descripcion varchar(100),
+	usuario varchar(100),
+	fecha date
+)
+
+
+
+select * from Demandantes
+
+create table Demandantes
+(
+  CodigoAcu varchar(30) primary key, 
+  NumID varchar(30) not null,
+  NombreCompleto varchar(90) not null,
+  Sobrenombre varchar(70) not null,  
+  Direccion  varchar (60) not null,
+  Telefono int,
+  Email varchar(50) not null,
+  Genero  varchar(50) not null,
+  FechaNacimiento date,
+  Edad int,  
+  CiudadNacimiento  varchar (60) not null,
+  DeptoNacimiento  varchar (60) not null,
+  PaisNacimiento varchar(60) not null,
+  Nacionalidad  varchar(60) not null,
+  EstadoCivil varchar(60) not null,
+  OcupacionActual varchar(100) not null,
+  NivelEducacion varchar(100) not null,   
+  EstaturaMetros int not null,
+  PesoLibras int not null,
+  ColorPelo varchar(100) not null,   
+  ColorOjos varchar(100) not null,
+  ColorPiel varchar(100) not null,
+  rasgos varchar(100) not null,     
+  Fotografia varbinary(MAX) 
+)
+
+
+
+
+create table HistorialCriminal
+(
+    CodigoHistorial varchar(30) primary key,
+    CodigoAcu varchar(30),
+    Descripcion varchar(400)
+)
+
+select* from Expediente
+
+create table Expediente
+(
+    CodigoExpe int IDENTITY primary key ,
+    CodigoAcu varchar(30),
+    FechaInicio date,
+    FechaFin date,
+    EstadoProceso varchar(50),
+    Especialidad varchar(50),
+    Etapa varchar(50),
+    MotivoConclusion varchar(100),
+    Obervaciones varchar(200)
+)
+
+drop table Evidencia
+
+select * from Evidencia
+
+create table Evidencia
+(
+    CodigoEvi int IDENTITY primary key,
+    CodigoExpe int,
+    DescripcionCorta varchar(100),
+    DescripcionLarga varchar(200),
+    Fotografia varbinary(MAX)
+)
+
+select * from Fiscalia
+
+create table Fiscalia
+(
+    CodigoFis int IDENTITY  primary key,
+    CodigoExpe int,
+	Nombre int,
+    Dirrecion varchar(100),
+    Ciuda varchar(70),
+	Depto varchar(70),
+	Telefono int,
+	Email varchar(40),
+    NombreEncarago varchar(70),
+)
+
+
+create table Delito
+(
+    CodigoDeli int IDENTITY primary key,
+    CodigoExpe int,
+    Nombre varchar(100),
+    NivelDelito varchar(1),
+    PenaMaxima varchar(50),
+    Fianza int
+)
+
+select* from Delito 
+
+create table Expendiente_Aboago
+(
+    CodigoAbogado int,
+    CodigoExpe int,
+    rol int
+)
+
+select * from Expendiente_Aboago  
+
+insert into Expendiente_Aboago (CodigoAbogado,CodigoExpe, rol )
+values (4,4,1)
+
+
+create table Abogado
+(
+    CodigoAbogado int IDENTITY primary key,
+    NumeroColegiacion int,
+    FechaColegiacion date,
+    TiempoEjercerAños int,
+    NumID int,
+    NombreCompleto varchar(100),
+    Direccion varchar(100), 
+    Telefono int,  
+    email varchar(30),
+    genero varchar(30)
+)
+
+
+
+--Procedimiento Almacenado para verificacion de Administrador de BD 
+Create procedure ValidarUsuariosBD 
+
+@Nombre_Usuario varchar (30),
+@contrasena varchar (30)
+
+as
+select * from Usuarios u
+where u.correo = @Nombre_Usuario and u.contrasena = @Contrasena
+go
+
+execute ValidarUsuariosBD 'prueba4@hotmail.com', 'admin'
+
+drop procedure ValidarUsuariosBD1
+
+select * from Usuarios 
+where correo ='prueba4@hotmail.com' and contrasena = 'admin'
+
+
+--PROCEDIMIENTO PARA MODIFICAR LA INFORMACION DE LOS DEMANDANTES
+Create procedure ModificarDemandantesBD 
+
+  @CodigoAcu varchar(30), 
+  @NumID varchar(30),
+  @NombreCompleto varchar(90) ,
+  @Sobrenombre varchar(70) ,  
+  @Direccion  varchar (60) ,
+  @Telefono int,
+  @Email varchar(50) ,
+  @Genero  varchar(50),
+  @FechaNacimiento date,
+  @Edad int,  
+  @CiudadNacimiento  varchar (60),
+  @DeptoNacimiento  varchar (60),
+  @PaisNacimiento varchar(60),
+  @Nacionalidad  varchar(60) ,
+  @EstadoCivil varchar(60),
+  @OcupacionActual varchar(100),
+  @NivelEducacion varchar(100),   
+  @EstaturaMetros int ,
+  @PesoLibras int,
+  @ColorPelo varchar(100),   
+  @ColorOjos varchar(100),
+  @ColorPiel varchar(100),
+  @rasgos varchar(100)
+as
+begin
+update Demandantes
+set NumID = @NumID,
+    NombreCompleto = @NombreCompleto,
+	Sobrenombre = @Sobrenombre,
+	Direccion = @Direccion,
+	Telefono = @Telefono,
+	Email = @Email,
+	Genero = @Genero,
+	FechaNacimiento = @FechaNacimiento,
+	Edad = @Edad,
+	CiudadNacimiento = @CiudadNacimiento,
+	DeptoNacimiento = @DeptoNacimiento,
+	PaisNacimiento = @PaisNacimiento,
+	Nacionalidad = @Nacionalidad,
+	EstadoCivil = @EstadoCivil,
+	OcupacionActual = @OcupacionActual, 
+	NivelEducacion = @NivelEducacion,
+	EstaturaMetros  =@EstaturaMetros,
+	PesoLibras = @PesoLibras,
+	ColorPelo = @ColorPelo,
+	ColorOjos = @ColorOjos,
+	ColorPiel = @ColorPiel,
+	rasgos = @rasgos
+where 
+     CodigoAcu = @CodigoAcu
+end
+
+
+-------------- ELIMINAR DEMANDANTES BD 
+create proc EliminarDemandantesBD
+@CodigoAcu varchar(30)
+as
+begin
+
+delete from Demandantes 
+where 
+     CodigoAcu = @CodigoAcu
+end
+
+
+---PROCEDIMIENTO PARA MODIFICAR LA INFORMACION DE LOS DEMANDANTES
+Create procedure ModificarUserBD 
+
+   @NumID varchar(30),
+   @NombreCompleto varchar(30),
+   @Telefono varchar(30),
+   @correo varchar(30),
+   @contrasena varchar(10),
+   @TipoUsuario varchar(30)
+as
+begin
+update Usuarios
+set NumID = @NumID,
+    NombreCompleto = @NombreCompleto,
+	Telefono = @Telefono,
+	correo = @correo,
+	contrasena = @contrasena,
+	TipoUsuario = @TipoUsuario
+where 
+     NumID = @NumID
+end
+
+
+-------------- ELIMINAR DEMANDANTES BD 
+create proc EliminarUserBD
+@NumID varchar(30)
+as
+begin
+
+delete from Usuarios  
+where 
+      NumID = @NumID
+end
+
+--RELACIONES
+
+Alter table HistorialCriminal add foreign key (CodigoAcu) 
+references Demandantes (CodigoAcu)
+on update Cascade On Delete Cascade
+
+Alter table Expediente add foreign key (CodigoAcu) 
+references Demandantes (CodigoAcu)
+on update Cascade On Delete Cascade
+
+Alter table Fiscalia add foreign key (CodigoExpe) 
+references Expediente (CodigoExpe)
+on update Cascade On Delete Cascade
+
+Alter table Delito add foreign key (CodigoExpe) 
+references Expediente (CodigoExpe)
+on update Cascade On Delete Cascade
+
+Alter table Evidencia add foreign key (CodigoExpe) 
+references Expediente (CodigoExpe)
+on update Cascade On Delete Cascade
+
+Alter table Expendiente_Aboago add foreign key (CodigoExpe) 
+references Expediente (CodigoExpe)
+on update Cascade On Delete Cascade
+
+Alter table Expendiente_Aboago add foreign key (CodigoAbogado) 
+references Abogado (CodigoAbogado)
+on update Cascade On Delete Cascade
+
+
+
+
+---REPORTES
+
+--Mostrar la informacion de un abogado que haya sido acusador, este procedimiento recibira el codigo del abogado el nombre del abogado
+
+create proc InformacionAbogadoAcusadorBD
+@CodigoAbogado varchar(100), 
+@Nombre varchar(100)
+as
+begin
+
+select * from Expendiente_Aboago ex, Abogado abo  
+where ex.rol = 1 and ex.CodigoAbogado = abo.CodigoAbogado and abo.CodigoAbogado = @CodigoAbogado or abo.NombreCompleto = @Nombre 
+end
+
+execute InformacionAbogadoAcusadorBD '4',''
+
+drop proc InformacionAcusadosDelitoBD
+
+
+---Mostrar la cantidad de acusados que han sido detenidos por un delito específico. Este procedimiento recibirá como parámetro el nombre del delito
+create proc InformacionAcusadosDelitoBD
+@Nombre varchar(100)
+as
+begin
+select COUNT(de.CodigoAcu)
+from Demandantes de, Expediente ex, Delito deli  
+where de.CodigoAcu = ex.CodigoAcu and ex.CodigoExpe = deli.CodigoExpe and deli.Nombre =  @Nombre
+end
+
+select * from Delito 
+
+execute InformacionAcusadosDelitoBD 'Asesinato'
+
+--Mostrar la información de los acusados, que hayan sido defendidos por un abogado especifico, 
+--Este procedimiento recibirá como parámetro el nombre del abogado o el nombre del abogado.
+
+create proc InformacionAcusadosAbogadoBD
+@Nombre varchar(100)
+as
+begin
+select * 
+from Demandantes de, Expediente ex, Abogado abo, Expendiente_Aboago  exabo
+where de.CodigoAcu = ex.CodigoAcu and ex.CodigoExpe = exabo.CodigoExpe and exabo.CodigoAbogado = abo.CodigoAbogado and abo.NombreCompleto = @Nombre 
+end
+
+select * from Abogado
+execute InformacionAcusadosAbogadoBD  'Pedro abogado'
+ 
+--Mostrar la información del expediente(s) del acusado, como ser el número de expediente, fecha de inicio, 
+--fecha de conclusión, estado del proceso, especialidad, etapa, motivo de conclusiones, observaciones, nombre del delito, 
+--nombre del acusado y el nombre de las evidencias asociadas al expediente. Este procedimiento recibirá como parámetro el código del acusado
+create proc InformacionExpedienteBD
+@CodigoAcu varchar(100)
+as
+begin
+select ex.CodigoExpe, ex.FechaInicio, ex.FechaFin, ex.EstadoProceso, ex.Especialidad, ex.Etapa, ex.MotivoConclusion, ex.Obervaciones,
+       del.Nombre, de.NombreCompleto, evi.DescripcionCorta
+from Demandantes de, Expediente ex, Delito del, Evidencia evi
+where de.CodigoAcu = ex.CodigoAcu and ex.CodigoExpe = del.CodigoExpe and ex.CodigoExpe = evi.CodigoExpe and de.CodigoAcu =  @CodigoAcu 
+end
+
+
+execute InformacionExpedienteBD  'abo1'
+
+select * from Evidencia  
+
+insert into Evidencia(CodigoExpe, DescripcionCorta, DescripcionLarga)
+values(4, 'Arma de fuego negra', 'Arma de fuego negra con dos balas y cartuchos')
+
+--Mostrar la información del perfil del acusado que más más delitos ha cometido. 
+--Se desea conocer es el nombre, email, genero, dirección, estatura, peso, sobrenombre de acusado, edad, fotos
+
+create proc InformacionPerfilAcusadoBD
+as
+begin
+select de.NombreCompleto, de.Email, de.Genero, de.Direccion, de.EstaturaMetros, de.PesoLibras, de.Sobrenombre, de.Edad, COUNT(*) as NumeroDelitos
+from Demandantes de, Expediente ex, Delito del
+where de.CodigoAcu = ex.CodigoAcu and ex.CodigoExpe = del.CodigoExpe
+group by de.NombreCompleto, de.Email, de.Genero, de.Direccion, de.EstaturaMetros, de.PesoLibras, de.Sobrenombre, de.Edad 
+end
+
+execute InformacionPerfilAcusadoBD
+
+
+
